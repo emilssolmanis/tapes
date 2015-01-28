@@ -1,0 +1,4 @@
+--ignore-dir=.tox
+--ignore-dir=.git
+--ignore-dir=.cache
+--ignore-dir=.idea
