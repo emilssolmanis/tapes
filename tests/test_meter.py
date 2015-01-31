@@ -13,15 +13,15 @@ class MeterTestCase(unittest.TestCase):
          # initialize Meter
          .expects_call().returns(1.0)
          # mark()
-         .next_call().returns(6.0)
+         .next_call().returns(60.0)
          # mark()
-         .next_call().returns(12.0)
+         .next_call().returns(5 * 60.0)
          # mark()
-         .next_call().returns(20.0)
+         .next_call().returns(15 * 60.0)
          # get_stats()
-         .next_call().returns(20.0)
-         .next_call().returns(20.0)
-         .next_call().returns(20.0))
+         .next_call().returns(15 * 60.0)
+         .next_call().returns(15 * 60.0)
+         .next_call().returns(15 * 60.0))
 
         meter = self.registry.meter('MeterTestCase.test_meter_count_works')
 

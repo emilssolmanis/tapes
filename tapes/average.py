@@ -45,6 +45,6 @@ class EWMA(object):
         count = self.uncounted
         self.uncounted = 0
         instant_rate = count / self.interval
-        self.rate += (self.alpha * (instant_rate - self.alpha))
+        self.rate += (self.alpha * (instant_rate - self.rate))
 
     tick = _tick_uninitialized
