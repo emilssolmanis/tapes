@@ -1,6 +1,8 @@
+import functools
 from addict import Dict
 
 from .meter import Meter
+from tapes.gauge import Gauge
 from .timer import Timer
 
 
@@ -33,6 +35,9 @@ class Registry(object):
 
     def timer(self, name):
         return self._add_stat(name, Timer)
+
+    def gauge(self, name, producer):
+        return self._add_stat(name, functools.partial(Gauge, producer))
 
     def get_stats(self):
         def _get_value(stats):

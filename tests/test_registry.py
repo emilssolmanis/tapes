@@ -16,3 +16,8 @@ class RegistryTestCase(unittest.TestCase):
         timer1 = self.registry.timer('lol.hurr.durr.Timer')
         timer2 = self.registry.timer('lol.hurr.durr.Timer')
         assert id(timer1) == id(timer2)
+
+    def test_multiple_gauge_calls_with_same_name_return_same_instance(self):
+        gauge1 = self.registry.gauge('lol.hurr.durr.Gauge', lambda: 0)
+        gauge2 = self.registry.gauge('lol.hurr.durr.Gauge', lambda: 0)
+        assert id(gauge1) == id(gauge2)
