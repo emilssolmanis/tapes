@@ -1,12 +1,14 @@
 from __future__ import division
 from time import time
-from tapes.average import EWMA
+
+from .average import EWMA
+from .stats import Stat
 
 
 _INTERVAL = 5.0
 
 
-class Meter(object):
+class Meter(Stat):
     def __init__(self):
         self.last_tick = time()
         self.count = 0

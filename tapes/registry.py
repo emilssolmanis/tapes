@@ -1,17 +1,16 @@
 from addict import Dict
-from tapes.meter import Meter
+
+from .meter import Meter
+from .timer import Timer
 
 
 class Registry(object):
     def __init__(self):
-        super(Registry, self).__init__()
         self.stats = dict()
 
-    def meter(self, name):
-        stat = Meter()
-
+    def _add_stat(self, name, stat_factory):
         path_parts = name.split('.')
-        path, meter_name = path_parts[:-1], path_parts[-1]
+        path, stat_name = path_parts[:-1], path_parts[-1]
 
         stats = self.stats
         for p in path:
@@ -22,9 +21,18 @@ class Registry(object):
                 stats[p] = new_dict
                 stats = new_dict
 
-        stats[meter_name] = stat
+        try:
+            return stats[stat_name]
+        except KeyError:
+            stat = stat_factory()
+            stats[stat_name] = stat
+            return stat
 
-        return stat
+    def meter(self, name):
+        return self._add_stat(name, Meter)
+
+    def timer(self, name):
+        return self._add_stat(name, Timer)
 
     def get_stats(self):
         def _get_value(stats):

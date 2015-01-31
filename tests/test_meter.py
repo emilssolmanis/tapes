@@ -1,5 +1,7 @@
 import unittest
+
 import fudge
+
 from tapes.registry import Registry
 
 
@@ -31,7 +33,8 @@ class MeterTestCase(unittest.TestCase):
 
         stats = self.registry.get_stats()
 
-        assert stats.MeterTestCase.test_meter_count_works.count == 3
-        assert stats.MeterTestCase.test_meter_count_works.m1 > 0
-        assert stats.MeterTestCase.test_meter_count_works.m5 > 0
-        assert stats.MeterTestCase.test_meter_count_works.m15 > 0
+        meter_stats = stats.MeterTestCase.test_meter_count_works
+        assert meter_stats.count == 3
+        assert float(meter_stats.m1) > 0
+        assert float(meter_stats.m5) > 0
+        assert float(meter_stats.m15) > 0
