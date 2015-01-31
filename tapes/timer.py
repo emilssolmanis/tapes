@@ -3,14 +3,14 @@ from time import time
 
 from .meter import Meter
 from .stats import Stat
-from .reservoir import ExponentiallyDecayingReservoir
+from .histogram import Histogram
 
 
 class Timer(Stat):
     def __init__(self):
         self.count = 0
         self.meter = Meter()
-        self.reservoir = ExponentiallyDecayingReservoir()
+        self.histogram = Histogram()
         super(Timer, self).__init__()
 
     @contextlib.contextmanager
@@ -22,11 +22,11 @@ class Timer(Stat):
             yield
         finally:
             end_time = time()
-            self.reservoir.update(end_time - start_time)
+            self.histogram.update(end_time - start_time)
 
     def get_values(self):
         values = self.meter.get_values()
-        snapshot = self.reservoir.get_snapshot()
+        snapshot = self.histogram.get_snapshot()
         values.update({
             'min': snapshot.get_min(),
             'max': snapshot.get_max(),
