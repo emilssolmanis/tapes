@@ -1,12 +1,7 @@
-import unittest
-
-from tapes.registry import Registry
+from .base import StatsTest
 
 
-class GaugeTestCase(unittest.TestCase):
-    def setUp(self):
-        self.registry = Registry()
-
+class GaugeTestCase(StatsTest):
     def test_gauge_works(self):
         fugly_hack = {'i': 0}
 

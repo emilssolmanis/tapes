@@ -1,12 +1,7 @@
-import unittest
-
-from tapes.registry import Registry
+from tests.base import StatsTest
 
 
-class RegistryTestCase(unittest.TestCase):
-    def setUp(self):
-        self.registry = Registry()
-
+class RegistryTestCase(StatsTest):
     def test_multiple_meter_calls_with_same_name_return_same_instance(self):
         meter1 = self.registry.meter('lol.hurr.durr.Meter')
         meter2 = self.registry.meter('lol.hurr.durr.Meter')

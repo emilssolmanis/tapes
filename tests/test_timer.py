@@ -1,15 +1,10 @@
 from time import sleep
-import unittest
-
 import fudge
 
-from tapes.registry import Registry
+from .base import StatsTest
 
 
-class TimerTestCase(unittest.TestCase):
-    def setUp(self):
-        self.registry = Registry()
-
+class TimerTestCase(StatsTest):
     @fudge.patch('tapes.meter.time')
     def test_timer_has_meter(self, meter_time):
         (meter_time
