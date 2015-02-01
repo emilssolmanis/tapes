@@ -50,7 +50,7 @@ class Registry(object):
     def get_stats(self):
         def _get_value(stats):
             try:
-                return Dict({k: _get_value(v) for k, v in stats.items()})
+                return Dict((k, _get_value(v)) for k, v in stats.items())
             except AttributeError:
                 return Dict(stats.get_values())
 
