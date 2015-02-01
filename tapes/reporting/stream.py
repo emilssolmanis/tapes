@@ -1,11 +1,13 @@
 from __future__ import print_function
 import json
+import os
 from threading import Thread, Event
 
 import abc
+import sys
 
 
-class ConsoleReporter(object):
+class Reporter(object):
     __metaclass__ = abc.ABCMeta
 
     def __init__(self, registry, interval):
@@ -21,17 +23,19 @@ class ConsoleReporter(object):
         pass
 
 
-class ThreadedConsoleReporter(ConsoleReporter):
-    def __init__(self, registry, interval):
-        super(ThreadedConsoleReporter, self).__init__(registry, interval)
+class ThreadedStreamReporter(Reporter):
+    def __init__(self, registry, interval, stream=sys.stdout):
+        super(ThreadedStreamReporter, self).__init__(registry, interval)
         self.thread = None
         self.termination_event = Event()
+        self.stream = stream
 
     def start(self):
         def _print_stats(registry, terminated_flag):
             while True:
                 stats = registry.get_stats()
-                print(json.dumps(stats))
+                json.dump(stats, self.stream)
+                self.stream.write(os.linesep)
                 terminated = terminated_flag.wait(self.interval.total_seconds())
                 if terminated:
                     return
