@@ -76,9 +76,11 @@ class ExponentiallyDecayingReservoir(object):
 
         if len(self.values) < self.size:
             self.values[priority] = sample
-        elif self.values.keys()[0] < priority:
-            self.values.setdefault(priority, value)
-            self.values.popitem()
+        else:
+            first_key = self.values.keys()[0]
+            if first_key < priority:
+                self.values.setdefault(priority, sample)
+                del self.values[first_key]
 
     def get_snapshot(self):
         return _WeightedSnapshot(self.values.values())
