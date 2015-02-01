@@ -26,17 +26,5 @@ class Timer(Stat):
 
     def get_values(self):
         values = self.meter.get_values()
-        snapshot = self.histogram.get_snapshot()
-        values.update({
-            'min': snapshot.get_min(),
-            'max': snapshot.get_max(),
-            'mean': snapshot.get_mean(),
-            'median': snapshot.get_quantile(0.5),
-            'stddev': snapshot.get_sd(),
-            'q75': snapshot.get_quantile(0.75),
-            'q95': snapshot.get_quantile(0.95),
-            'q98': snapshot.get_quantile(0.98),
-            'q99': snapshot.get_quantile(0.99),
-            'q999': snapshot.get_quantile(0.999),
-        })
+        values.update(self.histogram.get_values())
         return values

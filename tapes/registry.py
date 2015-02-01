@@ -4,6 +4,7 @@ from addict import Dict
 from .meter import Meter
 from .counter import Counter
 from .gauge import Gauge
+from .histogram import Histogram
 from .timer import Timer
 
 
@@ -11,7 +12,7 @@ class Registry(object):
     def __init__(self):
         self.stats = dict()
 
-    def _add_stat(self, name, stat_factory):
+    def _get_or_add_stat(self, name, stat_factory):
         path_parts = name.split('.')
         path, stat_name = path_parts[:-1], path_parts[-1]
 
@@ -32,16 +33,19 @@ class Registry(object):
             return stat
 
     def meter(self, name):
-        return self._add_stat(name, Meter)
+        return self._get_or_add_stat(name, Meter)
 
     def timer(self, name):
-        return self._add_stat(name, Timer)
+        return self._get_or_add_stat(name, Timer)
 
     def gauge(self, name, producer):
-        return self._add_stat(name, functools.partial(Gauge, producer))
+        return self._get_or_add_stat(name, functools.partial(Gauge, producer))
 
     def counter(self, name):
-        return self._add_stat(name, Counter)
+        return self._get_or_add_stat(name, Counter)
+
+    def histogram(self, name):
+        return self._get_or_add_stat(name, Histogram)
 
     def get_stats(self):
         def _get_value(stats):

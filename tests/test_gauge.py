@@ -1,4 +1,4 @@
-from .base import StatsTest
+from tests.base import StatsTest
 
 
 class GaugeTestCase(StatsTest):

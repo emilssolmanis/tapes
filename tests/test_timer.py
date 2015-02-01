@@ -57,10 +57,10 @@ class TimerTestCase(StatsTest):
 
         assert abs(float(timer_stats.mean) - sleep_time) < 0.0005
         assert float(timer_stats.stddev) > 0
-        assert float(timer_stats.median) > 0
         assert float(timer_stats.min) > 0
         assert float(timer_stats.max) > 0
 
+        assert float(timer_stats.q50) > 0
         assert float(timer_stats.q75) > 0
         assert float(timer_stats.q95) > 0
         assert float(timer_stats.q98) > 0

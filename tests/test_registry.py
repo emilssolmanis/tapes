@@ -16,3 +16,13 @@ class RegistryTestCase(StatsTest):
         gauge1 = self.registry.gauge('lol.hurr.durr.Gauge', lambda: 0)
         gauge2 = self.registry.gauge('lol.hurr.durr.Gauge', lambda: 0)
         assert id(gauge1) == id(gauge2)
+
+    def test_multiple_counter_calls_with_same_name_return_same_instance(self):
+        counter1 = self.registry.counter('lol.hurr.durr.Counter')
+        counter2 = self.registry.counter('lol.hurr.durr.Counter')
+        assert id(counter1) == id(counter2)
+
+    def test_multiple_histogram_calls_with_same_name_return_same_instance(self):
+        histogram1 = self.registry.histogram('lol.hurr.durr.Histogram')
+        histogram2 = self.registry.histogram('lol.hurr.durr.Histogram')
+        assert id(histogram1) == id(histogram2)
