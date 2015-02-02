@@ -1,6 +1,8 @@
 import unittest
+
 import fudge
-from tapes.reservoir import ExponentiallyDecayingReservoir
+
+from tapes.local.reservoir import ExponentiallyDecayingReservoir
 
 
 class ExponentiallyDecayingReservoirTestCase(unittest.TestCase):

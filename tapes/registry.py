@@ -1,11 +1,12 @@
 import functools
+
 from addict import Dict
 
-from .meter import Meter
-from .counter import Counter
-from .gauge import Gauge
-from .histogram import Histogram
-from .timer import Timer
+from .local.meter import Meter
+from .local.counter import Counter
+from .local.gauge import Gauge
+from .local.histogram import Histogram
+from .local.timer import Timer
 
 
 class Registry(object):

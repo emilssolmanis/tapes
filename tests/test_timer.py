@@ -1,7 +1,7 @@
 from time import sleep
 import fudge
 
-from .base import StatsTest
+from tests.base import StatsTest
 
 
 class TimerTestCase(StatsTest):
