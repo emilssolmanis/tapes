@@ -16,13 +16,14 @@ class Timer(Stat):
     @contextlib.contextmanager
     def time(self):
         start_time = time()
-        self.meter.mark()
-
         try:
             yield
         finally:
-            end_time = time()
-            self.histogram.update(end_time - start_time)
+            self.update(time() - start_time)
+
+    def update(self, value):
+        self.meter.mark()
+        self.histogram.update(value)
 
     def get_values(self):
         values = self.meter.get_values()
