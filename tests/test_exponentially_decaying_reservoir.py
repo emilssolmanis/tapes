@@ -2,7 +2,7 @@ import unittest
 
 import fudge
 
-from tapes.local.reservoir import ExponentiallyDecayingReservoir
+from tapes.reservoir import ExponentiallyDecayingReservoir
 
 
 class ExponentiallyDecayingReservoirTestCase(unittest.TestCase):

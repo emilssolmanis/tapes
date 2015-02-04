@@ -1,4 +1,4 @@
-from tests.base import StatsTest
+from tests.local.base import StatsTest
 
 
 class RegistryTestCase(StatsTest):

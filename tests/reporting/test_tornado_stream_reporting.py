@@ -22,4 +22,3 @@ class TornadoConsoleReportingTestCase(testing.AsyncTestCase):
 
         reports = map(json.loads, s.getvalue().strip().split(os.linesep))
         assert all(r['some']['tornado']['path']['value'] == 66 for r in reports)
-

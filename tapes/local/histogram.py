@@ -1,4 +1,4 @@
-from .reservoir import ExponentiallyDecayingReservoir
+from tapes.reservoir import ExponentiallyDecayingReservoir
 from .stats import Stat
 
 

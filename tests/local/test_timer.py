@@ -1,11 +1,12 @@
 from time import sleep
+
 import fudge
 
-from tests.base import StatsTest
+from tests.local.base import StatsTest
 
 
 class TimerTestCase(StatsTest):
-    @fudge.patch('tapes.meter.time')
+    @fudge.patch('tapes.local.meter.time')
     def test_timer_has_meter(self, meter_time):
         (meter_time
          # initialize Meter

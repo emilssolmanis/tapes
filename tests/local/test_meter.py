@@ -9,7 +9,7 @@ class MeterTestCase(unittest.TestCase):
     def setUp(self):
         self.registry = Registry()
 
-    @fudge.patch('tapes.meter.time')
+    @fudge.patch('tapes.local.meter.time')
     def test_meter_count_works(self, time):
         (time
          # initialize Meter

@@ -1,14 +1,17 @@
-from multiprocessing import Process
-
+from time import sleep
 from tornado import ioloop, web, httpserver, gen
 
-from tapes.registry import DistributedRegistry, registry_aggregator
+from tapes.distributed.registry import DistributedRegistry, RegistryAggregator
+
+registry = DistributedRegistry()
 
 
 class TimedHandler(web.RequestHandler):
+    timer = registry.timer('my.timer')
+
     @gen.coroutine
     def get(self):
-        with timer.time():
+        with TimedHandler.timer.time():
             self.write('finished')
 
 
@@ -17,14 +20,17 @@ if __name__ == "__main__":
         (r"/", TimedHandler),
     ])
 
-    p = Process(target=registry_aggregator)
-    p.start()
+    def _report(_registry):
+        while True:
+            print(_registry.get_stats())
+            sleep(5)
+
+    RegistryAggregator(_report).start()
 
     server = httpserver.HTTPServer(application)
     server.bind(8888)
     server.start(0)
 
-    registry = DistributedRegistry()
-    timer = registry.timer('my.timer')
+    registry.connect()
 
     ioloop.IOLoop.current().start()

@@ -5,10 +5,10 @@ from time import sleep
 
 import os
 from six import StringIO
-from six.moves import map
 
+from six.moves import map
 from tapes.reporting.stream import ThreadedStreamReporter
-from tests.base import StatsTest
+from tests.local.base import StatsTest
 
 
 class StreamReportingTestCase(StatsTest):

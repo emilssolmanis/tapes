@@ -5,7 +5,7 @@ function benchmark_module -a module
     sleep 3
 
     mkdir -p benchmark_results/{csv,png,gp}
-    ab -e benchmark_results/csv/$module.csv -g benchmark_results/gp/$module.gnuplot -n 2000 -c 100 http://localhost:8888/
+    ab -e benchmark_results/csv/$module.csv -g benchmark_results/gp/$module.gnuplot -n 20000 -c 100 http://localhost:8888/
 
     kill -9 (pgrep -f $module)
 end
@@ -26,6 +26,8 @@ function plot -a framework type
         dev.off();\
         " | R --no-save
 end
+
+rm -rf benchmark_results/*
 
 benchmark_module benchmark.tornado.no_metrics_single_process
 benchmark_module benchmark.tornado.metrics_single_process
