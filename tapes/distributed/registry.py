@@ -1,13 +1,13 @@
 from multiprocessing import Process
 from threading import Thread
-import zmq
-
 import functools
 
-from ..registry import Registry, BaseRegistry
+import zmq
 
+from ..registry import Registry, BaseRegistry
 from .meter import MeterProxy
 from .counter import CounterProxy
+from .message import Message
 from .timer import TimerProxy
 from .histogram import HistogramProxy
 
@@ -36,6 +36,9 @@ def _registry_aggregator(reporter, socket_addr):
             registry.counter(name).increment(value)
         elif type_ == 'histogram':
             registry.histogram(name).update(value)
+        elif type_ == 'shutdown':
+            socket.unbind(socket_addr)
+            socket.close()
 
 
 class RegistryAggregator(object):
@@ -55,6 +58,7 @@ class RegistryAggregator(object):
 
     def stop(self):
         self.process.terminate()
+        self.process.join()
 
 
 class DistributedRegistry(BaseRegistry):
@@ -93,3 +97,7 @@ class DistributedRegistry(BaseRegistry):
 
         _reset_socket(self.stats.values())
         self.socket = socket
+
+    def close(self):
+        self.socket.send_json(Message('shutdown', 'noname', -1))
+        self.socket.disconnect(self.socket_addr)
