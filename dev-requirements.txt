@@ -4,3 +4,7 @@ pytest-cov==1.8.1
 pytest-pep8==1.0.6
 pytest-timeout==0.4
 fudge==1.0.3
+
+tornado==4.0.2
+pyzmq==14.5.0
+requests==2.5.1

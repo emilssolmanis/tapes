@@ -1,5 +1,7 @@
 import unittest
+
 import fudge
+
 from tapes.reservoir import ExponentiallyDecayingReservoir
 
 

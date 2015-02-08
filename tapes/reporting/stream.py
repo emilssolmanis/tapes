@@ -5,13 +5,14 @@ from threading import Thread, Event
 
 import abc
 import sys
+import tapes
 
 
 class Reporter(object):
     __metaclass__ = abc.ABCMeta
 
     def __init__(self, registry, interval):
-        self.registry = registry
+        self.registry = registry if registry is not None else tapes._global_registry
         self.interval = interval
 
     @abc.abstractmethod
@@ -24,7 +25,7 @@ class Reporter(object):
 
 
 class ThreadedStreamReporter(Reporter):
-    def __init__(self, registry, interval, stream=sys.stdout):
+    def __init__(self, interval, stream=sys.stdout, registry=None):
         super(ThreadedStreamReporter, self).__init__(registry, interval)
         self.thread = None
         self.termination_event = Event()
