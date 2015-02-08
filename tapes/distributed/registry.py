@@ -16,9 +16,10 @@ _DEFAULT_IPC = 'ipc://tapes_metrics.ipc'
 
 
 def _registry_aggregator(reporter, socket_addr):
-    context = zmq.Context()
+    context = zmq.Context().instance()
     socket = context.socket(zmq.SUB)
     socket.bind(socket_addr)
+    socket.set_hwm(0)
     socket.setsockopt_string(zmq.SUBSCRIBE, u'')
     registry = Registry()
 
@@ -39,6 +40,7 @@ def _registry_aggregator(reporter, socket_addr):
         elif type_ == 'shutdown':
             socket.unbind(socket_addr)
             socket.close()
+            context.destroy()
 
 
 class RegistryAggregator(object):
@@ -66,6 +68,7 @@ class DistributedRegistry(BaseRegistry):
         super(DistributedRegistry, self).__init__()
         self.stats = dict()
         self.socket_addr = socket_addr
+        self.zmq_context = None
         self.socket = None
 
     def meter(self, name):
@@ -84,8 +87,9 @@ class DistributedRegistry(BaseRegistry):
         return self._get_or_add_stat(name, functools.partial(HistogramProxy, self.socket, name))
 
     def connect(self):
-        context = zmq.Context()
-        socket = context.socket(zmq.PUB)
+        self.zmq_context = zmq.Context().instance()
+        socket = self.zmq_context.socket(zmq.PUB)
+        socket.set_hwm(0)
         socket.connect(self.socket_addr)
 
         def _reset_socket(values):
@@ -101,3 +105,4 @@ class DistributedRegistry(BaseRegistry):
     def close(self):
         self.socket.send_json(Message('shutdown', 'noname', -1))
         self.socket.disconnect(self.socket_addr)
+        self.zmq_context.destroy()
