@@ -19,7 +19,7 @@ def test_distributed_registry_logs_stuff():
     aggregator.start()
 
     # allow the aggregator to start up to get all the messages
-    sleep(0.1)
+    sleep(1)
 
     registry = DistributedRegistry()
     registry.connect()
@@ -31,7 +31,7 @@ def test_distributed_registry_logs_stuff():
             meter.mark()
             counter.increment()
 
-        sleep(0.1)
+        sleep(1)
 
         response = requests.get('http://localhost:%d/' % http_port)
         assert response.status_code == 200

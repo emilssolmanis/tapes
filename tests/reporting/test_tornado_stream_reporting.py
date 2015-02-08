@@ -15,7 +15,7 @@ class TornadoConsoleReportingTestCase(testing.AsyncTestCase):
         counter.increment(66)
 
         s = StringIO()
-        reporter = TornadoStreamReporter(registry, timedelta(milliseconds=100), stream=s)
+        reporter = TornadoStreamReporter(timedelta(milliseconds=100), stream=s, registry=registry)
         reporter.start()
         yield gen.Task(self.io_loop.add_timeout, timedelta(milliseconds=200))
         reporter.stop()

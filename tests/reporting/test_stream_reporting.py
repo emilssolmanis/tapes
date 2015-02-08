@@ -20,7 +20,7 @@ class StreamReportingTestCase(StatsTest):
         counter.increment(42)
 
         s = StringIO()
-        reporter = ThreadedStreamReporter(self.registry, timedelta(milliseconds=100), stream=s)
+        reporter = ThreadedStreamReporter(timedelta(milliseconds=100), stream=s, registry=self.registry)
         reporter.start()
         sleep(0.2)
         reporter.stop()
