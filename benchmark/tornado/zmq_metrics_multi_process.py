@@ -22,8 +22,7 @@ if __name__ == "__main__":
 
     def _report(_registry):
         while True:
-            print(_registry.get_stats())
-            sleep(5)
+            sleep(100)
 
     RegistryAggregator(_report).start()
 
