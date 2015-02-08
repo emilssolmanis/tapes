@@ -16,7 +16,7 @@ _DEFAULT_IPC = 'ipc://tapes_metrics.ipc'
 
 
 def _registry_aggregator(reporter, socket_addr):
-    context = zmq.Context().instance()
+    context = zmq.Context()
     socket = context.socket(zmq.SUB)
     socket.bind(socket_addr)
     socket.set_hwm(0)
@@ -87,7 +87,7 @@ class DistributedRegistry(BaseRegistry):
         return self._get_or_add_stat(name, functools.partial(HistogramProxy, self.socket, name))
 
     def connect(self):
-        self.zmq_context = zmq.Context().instance()
+        self.zmq_context = zmq.Context()
         socket = self.zmq_context.socket(zmq.PUB)
         socket.set_hwm(0)
         socket.connect(self.socket_addr)
