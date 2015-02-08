@@ -35,7 +35,6 @@ def test_distributed_registry_logs_stuff():
 
         response = requests.get('http://localhost:%d/' % http_port)
         assert response.status_code == 200
-        print(response)
         stats = response.json()
         assert stats['my']['counter']['value'] == 1000
         assert stats['my']['meter']['count'] == 1000
