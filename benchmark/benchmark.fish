@@ -9,7 +9,7 @@ function benchmark_module -a module
     sleep 3
 
     mkdir -p benchmark_results/{csv,png,gp}
-    ab -e benchmark_results/csv/$module.csv -g benchmark_results/gp/$module.tsv -n 20000 -c 100 http://localhost:8888/
+    ab -e benchmark_results/csv/$module.csv -g benchmark_results/gp/$module.tsv -k -n 40000 -c 100 http://localhost:8888/
 
     kill -9 (pgrep -f $module)
 end
