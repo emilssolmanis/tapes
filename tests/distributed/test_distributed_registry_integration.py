@@ -1,5 +1,7 @@
 from time import sleep
+
 import requests
+
 from tapes.distributed.registry import DistributedRegistry, RegistryAggregator
 from tapes.distributed.reporting import http_reporter
 

@@ -88,21 +88,23 @@ class DistributedRegistry(BaseRegistry):
 
     def connect(self):
         self.zmq_context = zmq.Context()
-        socket = self.zmq_context.socket(zmq.PUB)
-        socket.set_hwm(0)
-        socket.connect(self.socket_addr)
+        sock = self.zmq_context.socket(zmq.PUB)
+        sock.set_hwm(0)
+        sock.setsockopt(zmq.LINGER, 0)
+        sock.connect(self.socket_addr)
 
         def _reset_socket(values):
             for value in values:
                 try:
                     _reset_socket(value.values())
                 except AttributeError:
-                    value.socket = socket
+                    value.socket = sock
 
         _reset_socket(self.stats.values())
-        self.socket = socket
+        self.socket = sock
 
     def close(self):
         self.socket.send_json(Message('shutdown', 'noname', -1))
         self.socket.disconnect(self.socket_addr)
+        self.socket.close()
         self.zmq_context.destroy()
