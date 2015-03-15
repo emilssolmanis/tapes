@@ -7,5 +7,7 @@ pytest-timeout==0.4
 fudge==1.0.3
 
 tornado==4.1
+Flask==0.10.1
+
 pyzmq==14.5.0
 requests==2.5.3
