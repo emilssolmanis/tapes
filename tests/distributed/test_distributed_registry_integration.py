@@ -55,14 +55,17 @@ def test_distributed_registry_logs_stuff():
                 stats = response.json()
                 # TODO: 0MQ batches the sends, and there's no reliable way to test this afaik. Just make sure it's no
                 # more than 100 messages behind...
-                assert abs(stats['my']['counter']['value'] - num_messages) < 100
-                assert abs(stats['my']['meter']['count'] - num_messages) < 100
+                assert abs(stats['my']['counter']['value'] - num_messages) < 200
+                assert abs(stats['my']['meter']['count'] - num_messages) < 200
                 eventually_consistent = True
             except AssertionError:
                 sleep(0.5)
 
         if not eventually_consistent:
-            raise AssertionError('Counts are inconsistent; dropping messages?')
+            raise AssertionError('Counts are inconsistent: {} sent, {} received; dropping messages?'.format(
+                num_messages,
+                stats['my']['counter']['value']
+            ))
     finally:
         aggregator.stop()
         registry.close()
