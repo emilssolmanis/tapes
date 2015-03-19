@@ -9,7 +9,7 @@ from tests.local.base import StatsTest
 
 
 class HTTPReportingTestCase(StatsTest):
-    def test_threaded_stream_reporter_prints_stats_with_intervals(self):
+    def test_http_reporter_serves_stats_as_json(self):
         counter = self.registry.counter('some.path')
 
         counter.increment(42)

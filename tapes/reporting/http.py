@@ -1,7 +1,7 @@
 from six.moves.BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 import json
 
-from .. import Reporter
+from . import Reporter
 from threading import Thread
 
 
