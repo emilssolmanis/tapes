@@ -2,31 +2,15 @@ from __future__ import print_function
 import json
 import os
 from threading import Thread, Event
-
-import abc
 import sys
-import tapes
 
-
-class Reporter(object):
-    __metaclass__ = abc.ABCMeta
-
-    def __init__(self, registry, interval):
-        self.registry = registry if registry is not None else tapes._global_registry
-        self.interval = interval
-
-    @abc.abstractmethod
-    def start(self):
-        pass
-
-    @abc.abstractmethod
-    def stop(self):
-        pass
+from . import Reporter
 
 
 class ThreadedStreamReporter(Reporter):
     def __init__(self, interval, stream=sys.stdout, registry=None):
-        super(ThreadedStreamReporter, self).__init__(registry, interval)
+        super(ThreadedStreamReporter, self).__init__(registry)
+        self.interval = interval
         self.thread = None
         self.termination_event = Event()
         self.stream = stream

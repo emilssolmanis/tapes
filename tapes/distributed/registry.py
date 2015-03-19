@@ -1,5 +1,4 @@
 from multiprocessing import Process
-from threading import Thread
 import functools
 
 import zmq
@@ -23,8 +22,8 @@ def _registry_aggregator(reporter, socket_addr):
     socket.setsockopt_string(zmq.SUBSCRIBE, u'')
     registry = Registry()
 
-    reporter_thread = Thread(target=reporter, args=(registry, ))
-    reporter_thread.start()
+    reporter.registry = registry
+    reporter.start()
 
     while True:
         type_, name, value = socket.recv_json()
@@ -38,6 +37,7 @@ def _registry_aggregator(reporter, socket_addr):
         elif type_ == 'histogram':
             registry.histogram(name).update(value)
         elif type_ == 'shutdown':
+            reporter.stop()
             socket.unbind(socket_addr)
             socket.close()
             context.destroy()

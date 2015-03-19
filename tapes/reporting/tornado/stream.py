@@ -10,7 +10,8 @@ from tapes.reporting.stream import Reporter
 
 class TornadoStreamReporter(Reporter):
     def __init__(self, interval, stream=sys.stdout, registry=None, io_loop=None):
-        super(TornadoStreamReporter, self).__init__(registry, interval)
+        super(TornadoStreamReporter, self).__init__(registry)
+        self.interval = interval
         self.io_loop = io_loop if io_loop is not None else ioloop.IOLoop.current()
         self.timeout = None
         self.stream = stream
