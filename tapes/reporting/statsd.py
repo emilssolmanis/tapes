@@ -1,10 +1,8 @@
 from __future__ import absolute_import
 
-from threading import Thread, Event
-
 import statsd
 
-from . import Reporter
+from . import ScheduledReporter
 from ..local.meter import Meter
 from ..local.timer import Timer
 from ..local.gauge import Gauge
@@ -12,12 +10,9 @@ from ..local.counter import Counter
 from ..local.histogram import Histogram
 
 
-class StatsdReporter(Reporter):
+class StatsdReporter(ScheduledReporter):
     def __init__(self, registry, interval, host='localhost', port=8125, prefix=None):
-        super(StatsdReporter, self).__init__(registry)
-        self.interval = interval
-        self.thread = None
-        self.termination_event = Event()
+        super(StatsdReporter, self).__init__(registry, interval)
         self.statsd_client = statsd.StatsClient(host, port, prefix)
 
     def _report_meter(self, name, meter):
@@ -85,17 +80,5 @@ class StatsdReporter(Reporter):
         except AttributeError:
             self._talk_this_way(curr_name, stats)
 
-    def start(self):
-        def _send_to_statsd():
-            while True:
-                self._walk_this_way(self.registry.stats, '')
-                terminated = self.termination_event.wait(self.interval.total_seconds())
-                if terminated:
-                    return
-
-        self.thread = Thread(target=_send_to_statsd)
-        self.thread.start()
-
-    def stop(self):
-        self.termination_event.set()
-        self.thread.join()
+    def report(self):
+        self._walk_this_way(self.registry.stats, '')
