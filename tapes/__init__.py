@@ -6,5 +6,5 @@ meter = _global_registry.meter
 timer = _global_registry.timer
 gauge = _global_registry.gauge
 counter = _global_registry.counter
-histogram = _global_registry.counter
+histogram = _global_registry.histogram
 get_stats = _global_registry.get_stats

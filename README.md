@@ -1,5 +1,41 @@
 [![Build Status](https://travis-ci.org/emilssolmanis/tapes.svg?branch=develop)](https://travis-ci.org/emilssolmanis/tapes)
 
+# Tapes
+***
+
+# Installation
+It's available from PyPI, something like
+
+    pip install tapes
+
+should get you the latest version.
+
+Alternatively, clone and install it manually, i.e.,
+
+    git clone https://github.com/emilssolmanis/tapes.git
+    cd tapes
+    python setup.py install
+
+# Quick start
+## Single process
+If you just need to get off the ground and flying, there's convenience methods in the `tapes` module, so you can do
+
+```python
+timer = tapes.timer('my.timer')
+
+@app.route('/widgets')
+def moo():
+    with timer.time():
+        return 'stuff'
+
+@app.route('/metrics')
+def foo():
+    return jsonify(tapes.get_stats())
+```
+
+
+
+## Multi process
 
 # LICENSE
 Copyright 2015 Emils Solmanis
