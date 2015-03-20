@@ -9,7 +9,7 @@ from . import ScheduledReporter
 
 class ThreadedStreamReporter(ScheduledReporter):
     def __init__(self, interval, stream=sys.stdout, registry=None):
-        super(ThreadedStreamReporter, self).__init__(registry, interval)
+        super(ThreadedStreamReporter, self).__init__(interval, registry)
         self.stream = stream
 
     def report(self):

@@ -10,7 +10,7 @@ from . import TornadoScheduledReporter
 
 class TornadoStreamReporter(TornadoScheduledReporter):
     def __init__(self, interval, stream=sys.stdout, registry=None, io_loop=None):
-        super(TornadoStreamReporter, self).__init__(registry, interval, io_loop)
+        super(TornadoStreamReporter, self).__init__(interval, registry, io_loop)
         self.stream = stream
 
     def report(self):

@@ -8,7 +8,7 @@ import tapes
 class Reporter(object):
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, registry):
+    def __init__(self, registry=None):
         self.registry = registry if registry is not None else tapes._global_registry
 
     @abc.abstractmethod
@@ -23,7 +23,7 @@ class Reporter(object):
 class ScheduledReporter(Reporter):
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, registry, interval):
+    def __init__(self, interval, registry=None):
         super(ScheduledReporter, self).__init__(registry)
         self.interval = interval
         self.thread = None

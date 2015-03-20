@@ -47,7 +47,7 @@ class StatsdReportingTestCase(StatsTest):
         meter.mark()
         meter.mark()
 
-        reporter = StatsdReporter(self.registry, timedelta(milliseconds=500))
+        reporter = StatsdReporter(timedelta(milliseconds=500), registry=self.registry)
         reporter.start()
         sleep(0.2)
         reporter.stop()
@@ -76,7 +76,7 @@ class StatsdReportingTestCase(StatsTest):
         timer.update(20.0)
         timer.update(21.0)
 
-        reporter = StatsdReporter(self.registry, timedelta(milliseconds=500))
+        reporter = StatsdReporter(timedelta(milliseconds=500), registry=self.registry)
         reporter.start()
         sleep(0.2)
         reporter.stop()
@@ -89,7 +89,7 @@ class StatsdReportingTestCase(StatsTest):
 
         self.registry.gauge('some.path', lambda: 42)
 
-        reporter = StatsdReporter(self.registry, timedelta(milliseconds=500))
+        reporter = StatsdReporter(timedelta(milliseconds=500), registry=self.registry)
         reporter.start()
         sleep(0.2)
         reporter.stop()
@@ -105,7 +105,7 @@ class StatsdReportingTestCase(StatsTest):
         counter.increment(20)
         counter.decrement(3)
 
-        reporter = StatsdReporter(self.registry, timedelta(milliseconds=500))
+        reporter = StatsdReporter(timedelta(milliseconds=500), registry=self.registry)
         reporter.start()
         sleep(0.2)
         reporter.stop()
@@ -130,7 +130,7 @@ class StatsdReportingTestCase(StatsTest):
         histogram.update(4.0)
         histogram.update(5.0)
 
-        reporter = StatsdReporter(self.registry, timedelta(milliseconds=500))
+        reporter = StatsdReporter(timedelta(milliseconds=500), registry=self.registry)
         reporter.start()
         sleep(0.2)
         reporter.stop()

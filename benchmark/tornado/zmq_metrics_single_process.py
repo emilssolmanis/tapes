@@ -1,7 +1,6 @@
-from time import sleep
-
 from tornado import ioloop, web, gen
 
+from tapes.reporting.http import HTTPReporter
 from tapes.distributed.registry import DistributedRegistry, RegistryAggregator
 
 registry = DistributedRegistry()
@@ -20,11 +19,7 @@ if __name__ == "__main__":
         (r"/", TimedHandler),
     ])
 
-    def _report(_registry):
-        while True:
-            sleep(100)
-
-    RegistryAggregator(_report).start()
+    RegistryAggregator(HTTPReporter(8889)).start()
 
     application.listen(8888)
 

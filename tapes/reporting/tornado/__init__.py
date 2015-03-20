@@ -4,8 +4,8 @@ from .. import ScheduledReporter
 
 
 class TornadoScheduledReporter(ScheduledReporter):
-    def __init__(self, registry, interval, io_loop=None):
-        super(TornadoScheduledReporter, self).__init__(registry, interval)
+    def __init__(self, interval, registry=None, io_loop=None):
+        super(TornadoScheduledReporter, self).__init__(interval, registry)
         self.io_loop = io_loop if io_loop is not None else ioloop.IOLoop.current()
         self.timeout = None
 

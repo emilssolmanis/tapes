@@ -11,8 +11,8 @@ from ..local.histogram import Histogram
 
 
 class StatsdReporter(ScheduledReporter):
-    def __init__(self, registry, interval, host='localhost', port=8125, prefix=None):
-        super(StatsdReporter, self).__init__(registry, interval)
+    def __init__(self, interval, host='localhost', port=8125, prefix=None, registry=None):
+        super(StatsdReporter, self).__init__(interval, registry)
         self.statsd_client = statsd.StatsClient(host, port, prefix)
 
     def _report_meter(self, name, meter):
