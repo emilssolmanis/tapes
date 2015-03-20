@@ -27,10 +27,16 @@ class _WeightedSnapshot(object):
             self.quantiles.append(self.quantiles[i] + self.normalized_weights[i])
 
     def get_min(self):
-        return self.values[0]
+        try:
+            return self.values[0]
+        except IndexError:
+            return 0
 
     def get_max(self):
-        return self.values[-1]
+        try:
+            return self.values[-1]
+        except IndexError:
+            return 0
 
     def get_mean(self):
         return sum(value * weight for value, weight in zip(self.values, self.normalized_weights))
@@ -44,7 +50,10 @@ class _WeightedSnapshot(object):
         try:
             return self.values[idx]
         except IndexError:
-            return self.values[-1]
+            try:
+                return self.values[-1]
+            except IndexError:
+                return 0
 
 
 class ExponentiallyDecayingReservoir(object):
