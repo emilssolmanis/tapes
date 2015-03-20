@@ -14,6 +14,7 @@ class Histogram(Stat):
     def get_values(self):
         snapshot = self.reservoir.get_snapshot()
         return {
+            'count': self.count,
             'min': snapshot.get_min(),
             'max': snapshot.get_max(),
             'mean': snapshot.get_mean(),

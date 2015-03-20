@@ -1,23 +1,17 @@
 from time import sleep
 
 import requests
+from tornado.testing import bind_unused_port
 
+from tapes.reporting.http import HTTPReporter
 from tapes.distributed.registry import DistributedRegistry, RegistryAggregator
-from tapes.distributed.reporting import http_reporter
-
-
-def _pick_port():
-    import socket
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind(('', 0))
-    port = s.getsockname()[1]
-    s.close()
-    return port
 
 
 def test_distributed_registry_logs_stuff():
-    http_port = _pick_port()
-    aggregator = RegistryAggregator(http_reporter(http_port))
+    sock, http_port = bind_unused_port()
+    sock.close()
+
+    aggregator = RegistryAggregator(HTTPReporter(http_port))
     aggregator.start()
 
     # allow the aggregator to start up to get all the messages
@@ -54,12 +48,12 @@ def test_distributed_registry_logs_stuff():
                 assert response.status_code == 200
                 stats = response.json()
                 # TODO: 0MQ batches the sends, and there's no reliable way to test this afaik. Just make sure it's no
-                # more than 100 messages behind...
+                # more than 200 messages behind...
                 assert abs(stats['my']['counter']['value'] - num_messages) < 200
                 assert abs(stats['my']['meter']['count'] - num_messages) < 200
                 eventually_consistent = True
             except AssertionError:
-                sleep(0.5)
+                sleep(1)
 
         if not eventually_consistent:
             raise AssertionError('Counts are inconsistent: {} sent, {} received; dropping messages?'.format(

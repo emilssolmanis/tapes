@@ -17,7 +17,7 @@ class TornadoConsoleReportingTestCase(testing.AsyncTestCase):
         s = StringIO()
         reporter = TornadoStreamReporter(timedelta(milliseconds=100), stream=s, registry=registry)
         reporter.start()
-        yield gen.Task(self.io_loop.add_timeout, timedelta(milliseconds=200))
+        yield gen.sleep(0.2)
         reporter.stop()
 
         reports = map(json.loads, s.getvalue().strip().split(os.linesep))
