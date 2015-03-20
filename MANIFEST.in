@@ -1,3 +1,4 @@
 include README.md
 include requirements.txt
-exclude-recursive benchmark
+recursive-include tapes *.py
+recursive-exclude tapes *.pyc
