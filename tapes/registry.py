@@ -59,22 +59,68 @@ class BaseRegistry(object):
 
 
 class Registry(BaseRegistry):
+    """Factory and storage location for all metrics stuff.
+
+    Use producer methods to create metrics. Metrics are hierarchical, the names are split on '.'.
+    """
+
     def meter(self, name):
+        """Creates or gets an existing meter.
+
+        :param name: The name
+        :return: The created or existing meter for the given name
+        """
         return self._get_or_add_stat(name, Meter)
 
     def timer(self, name):
+        """Creates or gets an existing timer.
+
+        :param name: The name
+        :return: The created or existing timer for the given name
+        """
         return self._get_or_add_stat(name, Timer)
 
     def gauge(self, name, producer):
+        """Creates or gets an existing gauge.
+
+        :param name: The name
+        :return: The created or existing gauge for the given name
+        """
         return self._get_or_add_stat(name, functools.partial(Gauge, producer))
 
     def counter(self, name):
+        """Creates or gets an existing counter.
+
+        :param name: The name
+        :return: The created or existing counter for the given name
+        """
         return self._get_or_add_stat(name, Counter)
 
     def histogram(self, name):
+        """Creates or gets an existing histogram.
+
+        :param name: The name
+        :return: The created or existing histogram for the given name
+        """
         return self._get_or_add_stat(name, Histogram)
 
     def get_stats(self):
+        """Retrieves the current values of the metrics associated with this registry, formatted as a dict.
+
+        The metrics form a hierarchy, their names are split on '.'. The returned dict is an `addict`, so you can
+        use it as either a regular dict or via attributes, e.g.,
+
+        >>> import tapes
+        >>> registry = tapes.Registry()
+        >>> timer = registry.timer('my.timer')
+        >>> stats = registry.get_stats()
+        >>> print(stats['my']['timer']['count'])
+        0
+        >>> print(stats.my.timer.count)
+        0
+
+        :return: The values of the metrics associated with this registry
+        """
         def _get_value(stats):
             try:
                 return Dict((k, _get_value(v)) for k, v in stats.items())

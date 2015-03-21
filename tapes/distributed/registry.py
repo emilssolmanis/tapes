@@ -44,13 +44,26 @@ def _registry_aggregator(reporter, socket_addr):
 
 
 class RegistryAggregator(object):
+    """Aggregates multiple registry proxies and reports on the unified metrics."""
     def __init__(self, reporter, socket_addr=_DEFAULT_IPC):
+        """Constructs a metrics registry aggregator.
+
+        The ``registry`` field on the ``reporter`` argument will be reset to an implementation instance prior to
+        calling ``start()``. Any previously set registry is not guaranteed to be used.
+
+        :param reporter: the reporter to use
+        :param socket_addr: the 0MQ socket address; has to be the same as corresponding proxies'
+        """
         super(RegistryAggregator, self).__init__()
         self.socket_addr = socket_addr
         self.reporter = reporter
         self.process = None
 
     def start(self, fork=True):
+        """Starts the registry aggregator.
+
+        :param fork: whether to fork a process; if ``False``, blocks and stays in the existing process
+        """
         if not fork:
             _registry_aggregator(self.reporter, self.socket_addr)
         else:
@@ -59,12 +72,21 @@ class RegistryAggregator(object):
             self.process = p
 
     def stop(self):
+        """Terminates the forked process.
+
+        Only valid if started as a fork, because... well you wouldn't get here otherwise.
+        :return:
+        """
         self.process.terminate()
         self.process.join()
 
 
 class DistributedRegistry(BaseRegistry):
+    """A registry proxy that pushes metrics data to a ``RegistryAggregator``."""
     def __init__(self, socket_addr=_DEFAULT_IPC):
+        """
+        :param socket_addr: the 0MQ IPC socket address; has to be the same as corresponding aggregator's
+        """
         super(DistributedRegistry, self).__init__()
         self.stats = dict()
         self.socket_addr = socket_addr
@@ -87,6 +109,7 @@ class DistributedRegistry(BaseRegistry):
         return self._get_or_add_stat(name, functools.partial(HistogramProxy, self.socket, name))
 
     def connect(self):
+        """Connects to the 0MQ socket and starts publishing."""
         self.zmq_context = zmq.Context()
         sock = self.zmq_context.socket(zmq.PUB)
         sock.set_hwm(0)

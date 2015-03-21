@@ -11,7 +11,15 @@ from ..local.histogram import Histogram
 
 
 class StatsdReporter(ScheduledReporter):
+    """Reporter for StatsD."""
     def __init__(self, interval, host='localhost', port=8125, prefix=None, registry=None):
+        """
+        :param interval: a timedelta, how often metrics are reported
+        :param host: the statsd host
+        :param port: the statsd port
+        :param prefix: the statsd prefix to use
+        :param registry: the registry to report on, defaults to the global one
+        """
         super(StatsdReporter, self).__init__(interval, registry)
         self.statsd_client = statsd.StatsClient(host, port, prefix)
 

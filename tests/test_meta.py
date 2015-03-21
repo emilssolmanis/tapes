@@ -20,6 +20,9 @@ class ClassWithMeta(six.with_metaclass(
 class AbstractClass(six.with_metaclass(
     metered_meta([('rate', 'some.path.{}.rate', registry.meter)], base=abc.ABCMeta)
 )):
+    def bar(self):
+        self.rate.mark()
+
     @abc.abstractmethod
     def foo(self):
         pass
@@ -27,7 +30,7 @@ class AbstractClass(six.with_metaclass(
 
 class ImplSubClass(AbstractClass):
     def foo(self):
-        self.rate.mark()
+        super(ImplSubClass, self).bar()
 
 
 class MetricsMetaTestCase(unittest.TestCase):
