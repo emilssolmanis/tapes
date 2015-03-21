@@ -2,9 +2,8 @@
 Tapes -- metrics for Python
 ===========================
 
-.. image:: https://travis-ci.org/emilssolmanis/tapes.svg?branch=develop
-   :target: https://travis-ci.org/emilssolmanis/tapes
-   :alt: Travis-CI build status
+|build| |docs|
+
 
 :Code:          https://github.com/emilssolmanis/tapes
 :License:       Apache 2; see LICENSE file
@@ -49,3 +48,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 .. _ReadTheDocs: http://tapes.readthedocs.org/en/latest/index.html
+.. |build| image:: https://travis-ci.org/emilssolmanis/tapes.svg?branch=develop
+    :target: https://travis-ci.org/emilssolmanis/tapes
+    :alt: Travis-CI build status
+.. |docs| image:: https://readthedocs.org/projects/tapes/badge/?version=latest
+    :alt: Documentation Status
+    :scale: 100%
+    :target: https://readthedocs.org/projects/docs/
