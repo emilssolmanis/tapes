@@ -1,17 +1,17 @@
-from datetime import datetime
 import os
 
 from setuptools import setup
+import tapes
 
 setup_pth = os.path.dirname(__file__)
-readme_pth = os.path.join(setup_pth, 'README.md')
+readme_pth = os.path.join(setup_pth, 'README.rst')
 requirements = os.path.join(setup_pth, 'requirements.txt')
 dev_requirements = os.path.join(setup_pth, 'dev-requirements.txt')
 
 
 setup(
     name='tapes',
-    version='0.0.dev{}'.format(datetime.now().strftime('%Y%m%d%H%M%S')),
+    version=tapes.__version__,
     description='Metrics for Python processes',
     keywords='metrics',
     license='Apache License (2.0)',
