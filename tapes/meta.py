@@ -37,12 +37,11 @@ def metered_meta(metrics, base=type):
                 self.finish({'other stuff': 'more of something'})
 
     This would produce two different relevant metrics,
-
-        * my.http.endpoints.MyImplHandler.latency
-        * my.http.endpoints.MyOtherImplHandler.latency
+        - ``my.http.endpoints.MyImplHandler.latency``
+        - ``my.http.endpoints.MyOtherImplHandler.latency``
 
     and, as an unfortunate side effect of adding it in the base class,
-    a `my.http.endpoints.MyCommonBaseHandler.latency` too.
+    a ``my.http.endpoints.MyCommonBaseHandler.latency`` too.
 
     :param metrics: list of (attr_name, metrics_path_template, metrics_factory)
     :param base: optional meta base if other than `type`
