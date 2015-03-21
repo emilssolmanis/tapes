@@ -2,39 +2,39 @@ def metered_meta(metrics, base=type):
     """Creates a metaclass that will add the specified metrics at a path parametrized on the dynamic class name.
 
     Prime use case is for base classes if all subclasses need separate metrics and / or the metrics need to be
-    used in base class methods, e.g., Tornado `RequestHandler`s like
+    used in base class methods, e.g., Tornado's ``RequestHandler`` like::
 
-    >>> import tapes
-    >>> import tornado
-    >>> import abc
-    >>>
-    >>> registry = tapes.Registry()
-    >>>
-    >>> class MyCommonBaseHandler(tornado.web.RequestHandler):
-    >>>     __metaclass__ = metered_meta([
-    >>>         ('latency', 'my.http.endpoints.{}.latency', registry.timer)
-    >>>     ], base=abc.ABCMeta)
-    >>>
-    >>>     @tornado.gen.coroutine
-    >>>     def get(self, *args, **kwargs):
-    >>>         with self.latency.time():
-    >>>             yield self.get_impl(*args, **kwargs)
-    >>>
-    >>>     @abc.abstractmethod
-    >>>     def get_impl(self, *args, **kwargs):
-    >>>         pass
-    >>>
-    >>>
-    >>> class MyImplHandler(MyCommonBaseHandler):
-    >>>     @tornado.gen.coroutine
-    >>>     def get_impl(self, *args, **kwargs):
-    >>>         self.finish({'stuff': 'something'})
-    >>>
-    >>>
-    >>> class MyOtherImplHandler(MyCommonBaseHandler):
-    >>>     @tornado.gen.coroutine
-    >>>     def get_impl(self, *args, **kwargs):
-    >>>         self.finish({'other stuff': 'more of something'})
+        import tapes
+        import tornado
+        import abc
+
+        registry = tapes.Registry()
+
+        class MyCommonBaseHandler(tornado.web.RequestHandler):
+            __metaclass__ = metered_meta([
+                ('latency', 'my.http.endpoints.{}.latency', registry.timer)
+            ], base=abc.ABCMeta)
+
+            @tornado.gen.coroutine
+            def get(self, *args, **kwargs):
+                with self.latency.time():
+                    yield self.get_impl(*args, **kwargs)
+
+            @abc.abstractmethod
+            def get_impl(self, *args, **kwargs):
+                pass
+
+
+        class MyImplHandler(MyCommonBaseHandler):
+            @tornado.gen.coroutine
+            def get_impl(self, *args, **kwargs):
+                self.finish({'stuff': 'something'})
+
+
+        class MyOtherImplHandler(MyCommonBaseHandler):
+            @tornado.gen.coroutine
+            def get_impl(self, *args, **kwargs):
+                self.finish({'other stuff': 'more of something'})
 
     This would produce two different relevant metrics,
 

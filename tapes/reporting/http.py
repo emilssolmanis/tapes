@@ -6,7 +6,16 @@ from threading import Thread
 
 
 class HTTPReporter(Reporter):
+    """Exposes metrics via HTTP.
+
+    For web applications, you should almost certainly just use your existing framework's capabilities. This is for
+    applications that don't have HTTP easily available.
+    """
     def __init__(self, port, registry=None):
+        """
+        :param port: Port to listen on
+        :param registry: The registry to report from, defaults to the global one
+        """
         super(HTTPReporter, self).__init__(registry)
         self.port = port
         self.thread = None

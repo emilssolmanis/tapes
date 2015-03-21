@@ -4,6 +4,9 @@ API docs
 .. automodule:: tapes.registry
     :members:
 
+.. automodule:: tapes.meta
+    :members:
+
 .. automodule:: tapes.reporting
     :members:
 

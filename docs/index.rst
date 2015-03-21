@@ -1,10 +1,5 @@
-.. tapes documentation master file, created by
-   sphinx-quickstart on Sat Mar 21 19:07:54 2015.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to tapes's documentation!
-=================================
+Tapes |version|
+===============
 
 Contents:
 
@@ -14,6 +9,8 @@ Contents:
    quickstart
    api
 
+This is a native Python metrics library implementation. It currently supports Python 2.7, 3.4 and PyPy, but most other
+versions should probably work.
 
 Indices and tables
 ==================
