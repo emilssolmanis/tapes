@@ -99,7 +99,9 @@ Currently the push reporting is implemented for streams and StatsD.
 
 The reporters are all used almost the same, i.e., by creating one and calling ``start()`` on it::
 
-    reporter = SomeScheduledReporter(interval=timedelta(seconds=10), registry=registry)
+    reporter = SomeScheduledReporter(
+        interval=timedelta(seconds=10), registry=registry
+    )
     reporter.start()
 
 If you want a guaranteed low latency setup, you might want to look into the multi-process options below.
@@ -108,3 +110,57 @@ Otherwise, take a stroll through :py:mod:`tapes.reporting`
 
 Multi process
 =============
+
+Python web applications are generally run with several forks handling the same socket, either via *uWSGI*, *gunicorn*,
+or, in the case of Tornado, just natively.
+
+This causes problems with metrics, namely
+ - HTTP reporting breaks. The reported metrics are per-fork and you get random forks every time you make a request
+ - Metrics aren't strictly commutative, so even if you do push-reporting, you end up losing some info in the combiner,
+   e.g., StatsD
+ - Push-reporting generally means blocking your main application's execution due to the GIL
+
+Hence, with Tapes you have an option to
+ - run a light-weight proxy registry per fork
+ - have an aggregating master registry that does all the reporting in a separate fork
+
+The proxy registries communicate with the master registry via 0MQ IPC pub-sub.
+Because 0MQ is really, **really** fast, this ends up being **faster** than just computing the metrics locally anyway.
+
+The obvious drawbacks are
+ - a separate forked process doing the aggregation and reporting
+ - a slight lag if the traffic volume is low due to batching in 0MQ
+
+With that said, it's much simpler to actually use than it sounds. The reporters are the same, so the only changes are
+the use of an aggregator and proxy registries.
+
+*NOTE*: due to the way ``gauge`` operates, it's unavailable in the distributed mode. If / when I figure out how to
+combine it, I'll add it.
+
+Tornado example::
+
+    registry = DistributedRegistry()
+
+    class TimedHandler(web.RequestHandler):
+        timer = registry.timer('my.timer')
+
+        @gen.coroutine
+        def get(self):
+            with TimedHandler.timer.time():
+                self.write('finished')
+
+    RegistryAggregator(HTTPReporter(8889)).start()
+
+    server = httpserver.HTTPServer(application)
+    server.bind(8888)
+    server.start(0)
+
+    registry.connect()
+
+    ioloop.IOLoop.current().start()
+
+**NOTE**
+ - :py:meth:`tapes.distributed.registry.RegistryAggregator.start` is called **before** the ``fork()`` call
+ - :py:meth:`tapes.distributed.registry.DistributedRegistry.connect` is called **after** the ``fork()`` call
+
+Check the API docs for more info -- :py:mod:`tapes.distributed.registry`.

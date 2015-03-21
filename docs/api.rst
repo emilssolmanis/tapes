@@ -27,3 +27,6 @@ API docs
 
 .. automodule:: tapes.reporting.tornado.stream
     :members:
+
+.. automodule:: tapes.distributed.registry
+    :members:
