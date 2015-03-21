@@ -109,6 +109,7 @@ class DistributedRegistry(BaseRegistry):
         return self._get_or_add_stat(name, functools.partial(HistogramProxy, self.socket, name))
 
     def connect(self):
+        """Connects to the 0MQ socket and starts publishing."""
         self.zmq_context = zmq.Context()
         sock = self.zmq_context.socket(zmq.PUB)
         sock.set_hwm(0)
