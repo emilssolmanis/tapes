@@ -54,4 +54,4 @@ limitations under the License.
 .. |docs| image:: https://readthedocs.org/projects/tapes/badge/?version=latest
     :alt: Documentation Status
     :scale: 100%
-    :target: https://readthedocs.org/projects/docs/
+    :target: https://readthedocs.org/projects/tapes/?badge=latest
