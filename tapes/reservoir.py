@@ -86,7 +86,7 @@ class ExponentiallyDecayingReservoir(object):
         if len(self.values) < self.size:
             self.values[priority] = sample
         else:
-            first_key = self.values.keys()[0]
+            first_key = next(self.values.iterkeys())
             if first_key < priority:
                 self.values.setdefault(priority, sample)
                 del self.values[first_key]

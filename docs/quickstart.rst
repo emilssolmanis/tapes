@@ -125,7 +125,7 @@ Hence, with Tapes you have an option to
  - have an aggregating master registry that does all the reporting in a separate fork
 
 The proxy registries communicate with the master registry via 0MQ IPC pub-sub.
-Because 0MQ is really, **really** fast, this ends up being **faster** than just computing the metrics locally anyway.
+Because 0MQ is really, **really** fast, this ends up almost as fast as just computing the metrics locally anyway.
 
 The obvious drawbacks are
  - a separate forked process doing the aggregation and reporting
