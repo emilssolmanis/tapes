@@ -9,6 +9,19 @@ All you need to do to run them yourself is check out the code and run::
 
 The results shown here are from an old-ish i5 laptop and are by no means 100% conclusive. With that said...
 
+Just the timer
+==============
+
+This just runs some timer metric calls via Python's ``timeit``. The times are
+
+======= =============== ===============
+         Tapes           Scales
+======= =============== ===============
+Py 2.7   3.0038728714    12.1747989655
+Py 3.4   3.3859353300    15.8657573729
+PyPy     0.4108750820    11.163599968
+
+
 Flask
 =====
 
