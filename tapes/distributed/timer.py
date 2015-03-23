@@ -16,4 +16,4 @@ class TimerProxy(object):
             yield
         finally:
             end_time = time()
-            self.socket.send_json(Message('timer', self.name, end_time - start_time))
+            self.socket.send_pyobj(Message('timer', self.name, end_time - start_time))

@@ -7,7 +7,7 @@ class CounterProxy(object):
         self.name = name
 
     def increment(self, n=1):
-        self.socket.send_json(Message('counter', self.name, n))
+        self.socket.send_pyobj(Message('counter', self.name, n))
 
     def decrement(self, n=1):
-        self.socket.send_json(Message('counter', self.name, -n))
+        self.socket.send_pyobj(Message('counter', self.name, -n))

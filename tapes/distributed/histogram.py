@@ -7,4 +7,4 @@ class HistogramProxy(object):
         self.name = name
 
     def update(self, value):
-        self.socket.send_json(Message('histogram', self.name, value))
+        self.socket.send_pyobj(Message('histogram', self.name, value))

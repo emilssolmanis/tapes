@@ -8,4 +8,4 @@ class MeterProxy(object):
         self.socket = socket
 
     def mark(self, n=1):
-        self.socket.send_json(Message('meter', self.name, n))
+        self.socket.send_pyobj(Message('meter', self.name, n))

@@ -26,7 +26,7 @@ def _registry_aggregator(reporter, socket_addr):
     reporter.start()
 
     while True:
-        type_, name, value = socket.recv_json()
+        type_, name, value = socket.recv_pyobj()
 
         if type_ == 'meter':
             registry.meter(name).mark(value)
@@ -127,7 +127,7 @@ class DistributedRegistry(BaseRegistry):
         self.socket = sock
 
     def close(self):
-        self.socket.send_json(Message('shutdown', 'noname', -1))
+        self.socket.send_pyobj(Message('shutdown', 'noname', -1))
         self.socket.disconnect(self.socket_addr)
         self.socket.close()
         self.zmq_context.destroy()
