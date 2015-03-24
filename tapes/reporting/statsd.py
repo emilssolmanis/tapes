@@ -26,14 +26,14 @@ class StatsdReporter(ScheduledReporter):
 
     def _report_meter(self, name, meter):
         stats = meter.get_values()
-        self.statsd_client.gauge('{}.count'.format(name), stats['count'])
+        self.statsd_client.gauge('{}.total'.format(name), stats['count'])
         self.statsd_client.timing('{}.m1_rate'.format(name), stats['m1'])
         self.statsd_client.timing('{}.m5_rate'.format(name), stats['m5'])
         self.statsd_client.timing('{}.m15_rate'.format(name), stats['m15'])
 
     def _report_timer(self, name, timer):
         stats = timer.get_values()
-        self.statsd_client.gauge('{}.count'.format(name), stats['count'])
+        self.statsd_client.gauge('{}.total'.format(name), stats['count'])
         self.statsd_client.timing('{}.m1_rate'.format(name), stats['m1'])
         self.statsd_client.timing('{}.m5_rate'.format(name), stats['m5'])
         self.statsd_client.timing('{}.m15_rate'.format(name), stats['m15'])
@@ -58,7 +58,7 @@ class StatsdReporter(ScheduledReporter):
 
     def _report_histogram(self, name, histogram):
         stats = histogram.get_values()
-        self.statsd_client.gauge('{}.count'.format(name), stats['count'])
+        self.statsd_client.gauge('{}.total'.format(name), stats['count'])
         self.statsd_client.timing('{}.min'.format(name), stats['min'])
         self.statsd_client.timing('{}.max'.format(name), stats['max'])
         self.statsd_client.timing('{}.mean'.format(name), stats['mean'])
