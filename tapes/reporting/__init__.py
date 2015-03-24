@@ -1,8 +1,12 @@
 from __future__ import print_function
+import logging
 from threading import Event, Thread
 
 import abc
 import tapes
+
+
+reporting_logger = logging.getLogger('tapes.reporting')
 
 
 class Reporter(object):

@@ -1,8 +1,9 @@
 from __future__ import absolute_import
+import logging
 
 import statsd
 
-from . import ScheduledReporter
+from . import ScheduledReporter, reporting_logger
 from ..local.meter import Meter
 from ..local.timer import Timer
 from ..local.gauge import Gauge
@@ -90,4 +91,6 @@ class StatsdReporter(ScheduledReporter):
             self._talk_this_way(curr_name, stats)
 
     def report(self):
+        if reporting_logger.isEnabledFor(logging.DEBUG):
+            reporting_logger.debug('Reporting to StatsD %s', self.registry.get_stats())
         self._walk_this_way(self.registry.stats, '')
