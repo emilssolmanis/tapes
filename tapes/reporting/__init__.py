@@ -53,6 +53,8 @@ class ScheduledReporter(Reporter):
         pass
 
     def start(self):
+        reporting_logger.debug('Starting reporter %s', self.__class__.__name__)
+
         def _report():
             while True:
                 self.report()
@@ -61,7 +63,12 @@ class ScheduledReporter(Reporter):
                     return
         self.thread = Thread(target=_report)
         self.thread.start()
+        reporting_logger.debug('Started reporter %s', self.__class__.__name__)
 
     def stop(self):
+        reporting_logger.debug('Stopping reporter %s', self.__class__.__name__)
+
         self.termination_event.set()
         self.thread.join()
+
+        reporting_logger.debug('Stopped reporter %s', self.__class__.__name__)

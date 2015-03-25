@@ -3,6 +3,7 @@ import functools
 
 import zmq
 
+from . import distributed_logger
 from ..registry import Registry, BaseRegistry
 from .meter import MeterProxy
 from .counter import CounterProxy
@@ -20,6 +21,9 @@ def _registry_aggregator(reporter, socket_addr):
     socket.bind(socket_addr)
     socket.set_hwm(0)
     socket.setsockopt_string(zmq.SUBSCRIBE, u'')
+
+    distributed_logger.info('Bound ZMQ socket %s', socket_addr)
+
     registry = Registry()
 
     reporter.registry = registry
@@ -27,6 +31,7 @@ def _registry_aggregator(reporter, socket_addr):
 
     while True:
         type_, name, value = socket.recv_pyobj()
+        distributed_logger.debug('Received message in aggregator process (%s %s %s)', type_, name, value)
 
         if type_ == 'meter':
             registry.meter(name).mark(value)
@@ -37,6 +42,7 @@ def _registry_aggregator(reporter, socket_addr):
         elif type_ == 'histogram':
             registry.histogram(name).update(value)
         elif type_ == 'shutdown':
+            distributed_logger.info('Received shutdown message in aggregator, terminating', socket_addr)
             reporter.stop()
             socket.unbind(socket_addr)
             socket.close()
@@ -65,10 +71,13 @@ class RegistryAggregator(object):
         :param fork: whether to fork a process; if ``False``, blocks and stays in the existing process
         """
         if not fork:
+            distributed_logger.info('Starting metrics aggregator, not forking')
             _registry_aggregator(self.reporter, self.socket_addr)
         else:
+            distributed_logger.info('Starting metrics aggregator, forking')
             p = Process(target=_registry_aggregator, args=(self.reporter, self.socket_addr, ))
             p.start()
+            distributed_logger.info('Started metrics aggregator as PID %s', p.pid)
             self.process = p
 
     def stop(self):
@@ -77,8 +86,10 @@ class RegistryAggregator(object):
         Only valid if started as a fork, because... well you wouldn't get here otherwise.
         :return:
         """
+        distributed_logger.info('Stopping metrics aggregator')
         self.process.terminate()
         self.process.join()
+        distributed_logger.info('Stopped metrics aggregator')
 
 
 class DistributedRegistry(BaseRegistry):
@@ -110,11 +121,13 @@ class DistributedRegistry(BaseRegistry):
 
     def connect(self):
         """Connects to the 0MQ socket and starts publishing."""
+        distributed_logger.info('Connecting registry proxy to ZMQ socket %s', self.socket_addr)
         self.zmq_context = zmq.Context()
         sock = self.zmq_context.socket(zmq.PUB)
         sock.set_hwm(0)
         sock.setsockopt(zmq.LINGER, 0)
         sock.connect(self.socket_addr)
+        distributed_logger.info('Connected registry proxy to ZMQ socket %s', self.socket_addr)
 
         def _reset_socket(values):
             for value in values:
@@ -123,11 +136,15 @@ class DistributedRegistry(BaseRegistry):
                 except AttributeError:
                     value.socket = sock
 
+        distributed_logger.debug('Resetting socket on metrics proxies')
         _reset_socket(self.stats.values())
         self.socket = sock
+        distributed_logger.debug('Reset socket on metrics proxies')
 
     def close(self):
+        distributed_logger.info('Shutting down metrics proxy')
         self.socket.send_pyobj(Message('shutdown', 'noname', -1))
         self.socket.disconnect(self.socket_addr)
         self.socket.close()
         self.zmq_context.destroy()
+        distributed_logger.info('Metrics proxy shutdown complete')
