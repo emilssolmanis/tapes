@@ -3,15 +3,15 @@ import logging
 from threading import Event, Thread
 
 import abc
+import six
 import tapes
 
 
 reporting_logger = logging.getLogger('tapes.reporting')
 
 
+@six.add_metaclass(abc.ABCMeta)
 class Reporter(object):
-    __metaclass__ = abc.ABCMeta
-
     def __init__(self, registry=None):
         self.registry = registry if registry is not None else tapes._global_registry
 
@@ -26,10 +26,9 @@ class Reporter(object):
         pass
 
 
+@six.add_metaclass(abc.ABCMeta)
 class ScheduledReporter(Reporter):
     """Super class for scheduled reporters. Handles scheduling via a ``Thread``."""
-    __metaclass__ = abc.ABCMeta
-
     def __init__(self, interval, registry=None):
         """Creates a reporter that reports with the given interval.
 

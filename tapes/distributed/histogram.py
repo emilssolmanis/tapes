@@ -1,10 +1,11 @@
+from .proxy import MetricsProxy
 from .message import Message
 
 
-class HistogramProxy(object):
+class HistogramProxy(MetricsProxy):
     def __init__(self, socket, name):
-        self.socket = socket
+        super(HistogramProxy, self).__init__(socket)
         self.name = name
 
     def update(self, value):
-        self.socket.send_pyobj(Message('histogram', self.name, value))
+        self.send(Message('histogram', self.name, value))

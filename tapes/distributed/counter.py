@@ -1,13 +1,14 @@
+from .proxy import MetricsProxy
 from .message import Message
 
 
-class CounterProxy(object):
+class CounterProxy(MetricsProxy):
     def __init__(self, socket, name):
-        self.socket = socket
+        super(CounterProxy, self).__init__(socket)
         self.name = name
 
     def increment(self, n=1):
-        self.socket.send_pyobj(Message('counter', self.name, n))
+        self.send(Message('counter', self.name, n))
 
     def decrement(self, n=1):
-        self.socket.send_pyobj(Message('counter', self.name, -n))
+        self.send(Message('counter', self.name, -n))

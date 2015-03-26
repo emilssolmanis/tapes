@@ -2,6 +2,7 @@ import functools
 import abc
 
 from addict import Dict
+import six
 
 from .local.meter import Meter
 from .local.counter import Counter
@@ -10,9 +11,8 @@ from .local.histogram import Histogram
 from .local.timer import Timer
 
 
+@six.add_metaclass(abc.ABCMeta)
 class BaseRegistry(object):
-    __metaclass__ = abc.ABCMeta
-
     def __init__(self):
         super(BaseRegistry, self).__init__()
         self.stats = dict()
