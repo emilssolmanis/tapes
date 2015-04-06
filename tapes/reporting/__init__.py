@@ -1,13 +1,17 @@
 from __future__ import print_function
+import logging
 from threading import Event, Thread
 
 import abc
+import six
 import tapes
 
 
-class Reporter(object):
-    __metaclass__ = abc.ABCMeta
+reporting_logger = logging.getLogger('tapes.reporting')
 
+
+@six.add_metaclass(abc.ABCMeta)
+class Reporter(object):
     def __init__(self, registry=None):
         self.registry = registry if registry is not None else tapes._global_registry
 
@@ -22,10 +26,9 @@ class Reporter(object):
         pass
 
 
+@six.add_metaclass(abc.ABCMeta)
 class ScheduledReporter(Reporter):
     """Super class for scheduled reporters. Handles scheduling via a ``Thread``."""
-    __metaclass__ = abc.ABCMeta
-
     def __init__(self, interval, registry=None):
         """Creates a reporter that reports with the given interval.
 
@@ -49,6 +52,8 @@ class ScheduledReporter(Reporter):
         pass
 
     def start(self):
+        reporting_logger.debug('Starting reporter %s', self.__class__.__name__)
+
         def _report():
             while True:
                 self.report()
@@ -57,7 +62,12 @@ class ScheduledReporter(Reporter):
                     return
         self.thread = Thread(target=_report)
         self.thread.start()
+        reporting_logger.debug('Started reporter %s', self.__class__.__name__)
 
     def stop(self):
+        reporting_logger.debug('Stopping reporter %s', self.__class__.__name__)
+
         self.termination_event.set()
         self.thread.join()
+
+        reporting_logger.debug('Stopped reporter %s', self.__class__.__name__)
