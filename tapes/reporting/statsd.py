@@ -1,8 +1,9 @@
 from __future__ import absolute_import
+import logging
 
 import statsd
 
-from . import ScheduledReporter
+from . import ScheduledReporter, reporting_logger
 from ..local.meter import Meter
 from ..local.timer import Timer
 from ..local.gauge import Gauge
@@ -25,14 +26,14 @@ class StatsdReporter(ScheduledReporter):
 
     def _report_meter(self, name, meter):
         stats = meter.get_values()
-        self.statsd_client.gauge('{}.count'.format(name), stats['count'])
+        self.statsd_client.gauge('{}.total'.format(name), stats['count'])
         self.statsd_client.timing('{}.m1_rate'.format(name), stats['m1'])
         self.statsd_client.timing('{}.m5_rate'.format(name), stats['m5'])
         self.statsd_client.timing('{}.m15_rate'.format(name), stats['m15'])
 
     def _report_timer(self, name, timer):
         stats = timer.get_values()
-        self.statsd_client.gauge('{}.count'.format(name), stats['count'])
+        self.statsd_client.gauge('{}.total'.format(name), stats['count'])
         self.statsd_client.timing('{}.m1_rate'.format(name), stats['m1'])
         self.statsd_client.timing('{}.m5_rate'.format(name), stats['m5'])
         self.statsd_client.timing('{}.m15_rate'.format(name), stats['m15'])
@@ -57,7 +58,7 @@ class StatsdReporter(ScheduledReporter):
 
     def _report_histogram(self, name, histogram):
         stats = histogram.get_values()
-        self.statsd_client.gauge('{}.count'.format(name), stats['count'])
+        self.statsd_client.gauge('{}.total'.format(name), stats['count'])
         self.statsd_client.timing('{}.min'.format(name), stats['min'])
         self.statsd_client.timing('{}.max'.format(name), stats['max'])
         self.statsd_client.timing('{}.mean'.format(name), stats['mean'])
@@ -90,4 +91,6 @@ class StatsdReporter(ScheduledReporter):
             self._talk_this_way(curr_name, stats)
 
     def report(self):
+        if reporting_logger.isEnabledFor(logging.DEBUG):
+            reporting_logger.debug('Reporting to StatsD %s', self.registry.get_stats())
         self._walk_this_way(self.registry.stats, '')

@@ -1,12 +1,13 @@
 import contextlib
 from time import time
 
+from .proxy import MetricsProxy
 from .message import Message
 
 
-class TimerProxy(object):
+class TimerProxy(MetricsProxy):
     def __init__(self, socket, name):
-        self.socket = socket
+        super(TimerProxy, self).__init__(socket)
         self.name = name
 
     @contextlib.contextmanager
@@ -16,4 +17,4 @@ class TimerProxy(object):
             yield
         finally:
             end_time = time()
-            self.socket.send_json(Message('timer', self.name, end_time - start_time))
+            self.send(Message('timer', self.name, end_time - start_time))

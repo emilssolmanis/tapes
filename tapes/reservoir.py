@@ -69,7 +69,7 @@ class ExponentiallyDecayingReservoir(object):
         if now > self.next_scale_time:
             self.next_scale_time = now + _RESCALE_THRESHOLD
             old_start_time = self.start_time
-            self.start_time = time()
+            self.start_time = now
             scaling_factor = exp(-self.alpha * (self.start_time - old_start_time))
 
             self.values = SortedDict(
@@ -78,6 +78,7 @@ class ExponentiallyDecayingReservoir(object):
             )
 
     def update(self, value):
+        self._rescale_if_needed()
         timestamp = time()
         item_weight = exp(self.alpha * (timestamp - self.start_time))
         sample = _WeightedSample(value, item_weight)

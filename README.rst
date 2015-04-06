@@ -47,7 +47,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-.. _ReadTheDocs: http://tapes.readthedocs.org/en/latest/index.html
+.. _ReadTheDocs: http://tapes.readthedocs.org/en/latest/
 .. |build| image:: https://travis-ci.org/emilssolmanis/tapes.svg?branch=develop
     :target: https://travis-ci.org/emilssolmanis/tapes
     :alt: Travis-CI build status

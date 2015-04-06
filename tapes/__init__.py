@@ -1,4 +1,5 @@
-__version__ = '0.2'
+from datetime import datetime
+__version__ = '0.3'
 
 try:
     # we need __version__ for setup.py, sphinx stuff, just to generally be nice, etc.,

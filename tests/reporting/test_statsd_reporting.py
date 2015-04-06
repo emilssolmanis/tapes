@@ -26,7 +26,7 @@ class StatsdReportingTestCase(StatsTest):
     def test_statsd_reporter_periodically_sends_meter_stats_to_statsd(self, StatsClient, time):
         (StatsClient.expects_call().with_args('localhost', 8125, None)
                     .returns_fake()
-                    .expects('gauge').with_args('some.path.count', 5)
+                    .expects('gauge').with_args('some.path.total', 5)
                     .expects('timing').with_args('some.path.m1_rate', is_within(0.5).of(1.0))
                     .expects('timing').with_args('some.path.m5_rate', is_within(0.5).of(1.0))
                     .expects('timing').with_args('some.path.m15_rate', is_within(0.5).of(1.0)))
@@ -56,7 +56,7 @@ class StatsdReportingTestCase(StatsTest):
     def test_statsd_reporter_periodically_sends_timer_stats_to_statsd(self, StatsClient):
         (StatsClient.expects_call().with_args('localhost', 8125, None)
                     .returns_fake()
-                    .expects('gauge').with_args('some.path.count', 4)
+                    .expects('gauge').with_args('some.path.total', 4)
                     .expects('timing').with_args('some.path.m1_rate', is_float)
                     .expects('timing').with_args('some.path.m5_rate', is_float)
                     .expects('timing').with_args('some.path.m15_rate', is_float)
@@ -114,7 +114,7 @@ class StatsdReportingTestCase(StatsTest):
     def test_statsd_reporter_periodically_sends_histogram_stats_to_statsd(self, StatsClient):
         (StatsClient.expects_call().with_args('localhost', 8125, None)
                     .returns_fake()
-                    .expects('gauge').with_args('some.path.count', 3)
+                    .expects('gauge').with_args('some.path.total', 3)
                     .expects('timing').with_args('some.path.min', is_within(0.1).of(3))
                     .expects('timing').with_args('some.path.max', is_within(0.1).of(5))
                     .expects('timing').with_args('some.path.mean', is_within(0.1).of(4))
